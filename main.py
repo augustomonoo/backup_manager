@@ -76,7 +76,7 @@ def main(path: Path, extensions: List[str], recursive: bool, dry_run: bool):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Backup manager")
-    parser.add_argument("-p", "--path", type=Path, help="Path to backup folder")
+    parser.add_argument("backup_path", type=Path, help="Path to backup folder")
     parser.add_argument(
         "-e",
         "--extension",
@@ -103,7 +103,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     main(
-        path=args.path,
+        path=args.backup_path,
         extensions=args.extension,
         recursive=args.recursive,
         dry_run=args.dry_run,
