@@ -52,20 +52,20 @@ class BackupCollection(UserList):
     def filter_delete(self) -> BackupCollection:
         return self.filter_by_action([BackupAction.DELETE])
 
-    def __gruped_by_date(self, strfime: str) -> Dict[str, BackupCollection]:
+    def grouped_by_strftime(self, strfime: str) -> Dict[str, BackupCollection]:
         grouped = defaultdict(BackupCollection)
         for backup in self.data:
             grouped[backup.date.strftime(strfime)].append(backup)
         return grouped
 
     def grouped_by_year(self) -> Dict[str, BackupCollection]:
-        return self.__gruped_by_date("%Y")
+        return self.grouped_by_strftime("%Y")
 
     def grouped_by_month(self) -> Dict[str, BackupCollection]:
-        return self.__gruped_by_date("%Y-%m")
+        return self.grouped_by_strftime("%Y-%m")
 
     def grouped_by_day(self) -> Dict[str, BackupCollection]:
-        return self.__gruped_by_date("%Y-%m-%d")
+        return self.grouped_by_strftime("%Y-%m-%d")
 
     def disk_usage(self) -> int:
         return sum([backup.size for backup in self])
