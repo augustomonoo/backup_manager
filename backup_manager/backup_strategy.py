@@ -122,7 +122,7 @@ class DeleteUnset(BackupStrategy):
 
     def apply_on(self, collection: BackupCollection) -> BackupCollection:
         applied_backups = []
-        for backup in collection.without_actions_set():
+        for backup in collection.filter_unset():
             if backup.set_action(self.action):
                 applied_backups.append(backup)
         return BackupCollection(applied_backups)

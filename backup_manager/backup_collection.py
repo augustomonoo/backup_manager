@@ -40,16 +40,16 @@ class BackupCollection(UserList):
 
         return BackupCollection(data)
 
-    def with_actions_set(self) -> BackupCollection:
+    def filter_not_unset(self) -> BackupCollection:
         return self.filter_by_action([BackupAction.KEEP, BackupAction.DELETE])
 
-    def without_actions_set(self) -> BackupCollection:
+    def filter_unset(self) -> BackupCollection:
         return self.filter_by_action([BackupAction.UNSET])
 
-    def to_keep(self) -> BackupCollection:
+    def filter_keep(self) -> BackupCollection:
         return self.filter_by_action([BackupAction.KEEP])
 
-    def to_delete(self) -> BackupCollection:
+    def filter_delete(self) -> BackupCollection:
         return self.filter_by_action([BackupAction.DELETE])
 
     def __gruped_by_date(self, strfime: str) -> Dict[str, BackupCollection]:
@@ -83,4 +83,4 @@ class BackupCollection(UserList):
     def apply_actions(self):
         for backup in self:
             backup.apply_action()
-        self = self.to_keep()
+        self = self.filter_keep()

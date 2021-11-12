@@ -19,10 +19,10 @@ def apply_strategies(collection: BackupCollection, strategies: List[BackupStrate
 
 
 def fancy_print(collection_name: str, collection: BackupCollection):
-    modified = collection.with_actions_set()
-    untouched = collection.without_actions_set()
-    to_keep = collection.to_keep()
-    to_delete = collection.to_delete()
+    modified = collection.filter_not_unset()
+    untouched = collection.filter_unset()
+    to_keep = collection.filter_keep()
+    to_delete = collection.filter_delete()
     disk_usage = collection.disk_usage()
     disk_usage_after_actions = collection.disk_usage_after_actions()
     disk_usage_reduction = disk_usage / disk_usage_after_actions
