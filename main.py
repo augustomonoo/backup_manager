@@ -62,7 +62,6 @@ def main(path: Path, extensions: List[str], recursive: bool, dry_run: bool):
         glob = f"*.{extension}"
         if recursive:
             glob = "**/" + glob
-        print(glob)
         backups.extend(find_backup_files(path, glob))
 
     collections = build_collections_from_backup_file_list(backups)
