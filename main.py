@@ -83,7 +83,7 @@ def parse_args():
         type=str,
         help="File extensions to process. Pass multiple times to add more than one extension",
         action="append",
-        # nargs="+",
+        required=True,
     )
     parser.add_argument(
         "-r",
