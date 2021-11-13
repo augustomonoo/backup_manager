@@ -20,7 +20,7 @@ class BackupCollection(UserList):
         """
         bisect.insort(self.data, backup)
 
-    def filter_by_action(
+    def filter(
         self,
         action_set: Set[BackupAction] = set(BackupAction),
     ) -> BackupCollection:
@@ -32,23 +32,32 @@ class BackupCollection(UserList):
         Returns:
             list: A list of backups that match the specified action filter
         """
-        data = [
-            backup_file for backup_file in self.data if backup_file.action in action_set
-        ]
+        data = [backup_file for backup_file in self if backup_file.action in action_set]
 
         return BackupCollection(data)
 
-    def filter_not_unset(self) -> BackupCollection:
-        return self.filter_by_action(set[BackupAction.KEEP, BackupAction.DELETE])
-
     def filter_unset(self) -> BackupCollection:
-        return self.filter_by_action(set[BackupAction.UNSET])
+        return self.filter(set([BackupAction.UNSET]))
 
     def filter_keep(self) -> BackupCollection:
-        return self.filter_by_action(set[BackupAction.KEEP])
+        return self.filter(set([BackupAction.KEEP]))
 
     def filter_delete(self) -> BackupCollection:
-        return self.filter_by_action(set[BackupAction.DELETE])
+        return self.filter(set([BackupAction.DELETE]))
+
+    def exclude(self, action_set: Set[BackupAction]) -> BackupCollection:
+        return BackupCollection(
+            [backup for backup in self if backup.action not in action_set]
+        )
+
+    def exclude_delete(self) -> BackupCollection:
+        return self.exclude(set([BackupAction.DELETE]))
+
+    def exclude_unset(self) -> BackupCollection:
+        return self.exclude(set([BackupAction.UNSET]))
+
+    def exclude_keep(self) -> BackupCollection:
+        return self.exclude(set([BackupAction.KEEP]))
 
     def grouped_by_strftime(self, strfime: str) -> Dict[str, BackupCollection]:
         grouped = defaultdict(BackupCollection)
@@ -69,14 +78,7 @@ class BackupCollection(UserList):
         return sum([backup.size for backup in self])
 
     def disk_usage_after_actions(self) -> int:
-        return sum(
-            [
-                backup.size
-                for backup in self.filter_by_action(
-                    [BackupAction.KEEP, BackupAction.UNSET]
-                )
-            ]
-        )
+        return sum([backup.size for backup in self.exclude_delete()])
 
     def apply_actions(self):
         for backup in self:

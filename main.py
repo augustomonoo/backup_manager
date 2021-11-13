@@ -19,7 +19,7 @@ def apply_strategies(collection: BackupCollection, strategies: List[BackupStrate
 
 
 def fancy_print(collection_name: str, collection: BackupCollection):
-    modified = collection.filter_not_unset()
+    modified = collection.exclude_unset()
     untouched = collection.filter_unset()
     to_keep = collection.filter_keep()
     to_delete = collection.filter_delete()
