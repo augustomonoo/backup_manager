@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import bisect
 from collections import UserList, defaultdict
-from typing import Dict, List
+from typing import Dict, Set
 
 from backup_manager.backup_file import BackupAction, BackupFile
 
@@ -22,35 +22,33 @@ class BackupCollection(UserList):
 
     def filter_by_action(
         self,
-        action_list: List[BackupAction] = [],
+        action_set: Set[BackupAction] = set(BackupAction),
     ) -> BackupCollection:
         """Returns a new collection of backups that match the specified action list.
 
         Args:
-            action_list (List[BackupAction], optional): A list of actions to filter by. Defaults to [].
+            action_set (Set[BackupAction], optional): A set of actions to use as filter. Defaults to all available actions.
 
         Returns:
             list: A list of backups that match the specified action filter
         """
         data = [
-            backup_file
-            for backup_file in self.data
-            if backup_file.action in action_list
+            backup_file for backup_file in self.data if backup_file.action in action_set
         ]
 
         return BackupCollection(data)
 
     def filter_not_unset(self) -> BackupCollection:
-        return self.filter_by_action([BackupAction.KEEP, BackupAction.DELETE])
+        return self.filter_by_action(set[BackupAction.KEEP, BackupAction.DELETE])
 
     def filter_unset(self) -> BackupCollection:
-        return self.filter_by_action([BackupAction.UNSET])
+        return self.filter_by_action(set[BackupAction.UNSET])
 
     def filter_keep(self) -> BackupCollection:
-        return self.filter_by_action([BackupAction.KEEP])
+        return self.filter_by_action(set[BackupAction.KEEP])
 
     def filter_delete(self) -> BackupCollection:
-        return self.filter_by_action([BackupAction.DELETE])
+        return self.filter_by_action(set[BackupAction.DELETE])
 
     def grouped_by_strftime(self, strfime: str) -> Dict[str, BackupCollection]:
         grouped = defaultdict(BackupCollection)
