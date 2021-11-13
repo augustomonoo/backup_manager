@@ -39,6 +39,8 @@ def fancy_print(collection_name: str, collection: BackupCollection):
 def find_backup_files(path, glob_filter="**/*.tar"):
     backups = []
     for file_path in path.glob(glob_filter):
+        if not file_path.is_file():
+            continue
         backups.append(BackupFile.from_path(file_path))
     return backups
 
