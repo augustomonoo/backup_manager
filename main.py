@@ -10,7 +10,6 @@ from backup_manager.backup_strategy import (
     LastN,
     LastOfNMonths,
 )
-from samples import setup_samples
 
 
 def apply_strategies(collection: BackupCollection, strategies: List[BackupStrategy]):
