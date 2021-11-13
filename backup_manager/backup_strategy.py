@@ -53,9 +53,7 @@ class LastN(BackupStrategy):
 
     def apply_on(self, collection: BackupCollection) -> BackupCollection:
         applied_backups = []
-        for backup in collection.filter_by_action(action_list=[BackupAction.UNSET])[
-            -self.n :
-        ]:
+        for backup in collection.filter_unset()[-self.n :]:
             if backup.set_action(self.action):
                 applied_backups.append(backup)
         return BackupCollection(applied_backups)
@@ -66,7 +64,7 @@ class DeleteUnset(BackupStrategy):
 
     def apply_on(self, collection: BackupCollection) -> BackupCollection:
         applied_backups = []
-        for backup in collection.filter_by_action(action_list=[BackupAction.UNSET]):
+        for backup in collection.filter_unset():
             if backup.set_action(self.action):
                 applied_backups.append(backup)
         return BackupCollection(applied_backups)
